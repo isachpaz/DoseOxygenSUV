@@ -1,5 +1,5 @@
 # DoseOxygenSUV
-## Dosemodification factor
+## Dose modification factor (DMF)
 
 Plot of dose modification factor against pO2 for k=2.5 mmHg and OERmax = 3.0. 
 
