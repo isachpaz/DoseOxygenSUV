@@ -15,8 +15,8 @@ def plot_dmf():
     dmf = DoseModificationFactor(max_oer=3.0, k_mmHg=2.5)
     po2line = np.linspace(start=0.0, stop=10.0, num=400)
     plt.plot(po2line, dmf.calculate(po2line), linewidth=2)
-    plt.xlabel("$pO_2$ (mmHg)",  fontsize=16)
-    plt.ylabel("Dose modification factor",  fontsize=16)
+    plt.xlabel("$pO_2$ (mmHg)", fontsize=16)
+    plt.ylabel("Dose modification factor", fontsize=16)
 
     plt.tick_params(labelsize=14)
 
@@ -25,6 +25,7 @@ def plot_dmf():
     # Show the minor grid lines with very faint and almost transparent grey lines
     plt.minorticks_on()
     plt.grid(b=True, which='minor', color='#999999', linestyle='-', alpha=0.2)
+    plt.savefig('dmf.png', dpi=1000, bbox_inches='tight')
     plt.show()
 
 
