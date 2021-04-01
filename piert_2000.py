@@ -3,13 +3,19 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 import pandas as pd
 
+# Import PySwarms
+import pyswarms as ps
+from pyswarms.utils.functions import single_obj as fx
+
 
 def exp_func(x, a, b, c):
-    return c + np.exp(a + b * x)
+    return c + a * np.exp(b * x)
 
 
 def main():
-    df = pd.read_csv('Dataset_piert_2000_line_fit.csv')
+    #df = pd.read_csv('Dataset_piert_2000_line_fit.csv')
+    df = pd.read_csv('Dataset_piert_2000_points.csv')
+
     print(df.head())
 
     po2 = np.array(df['po2'])  # x-axis
@@ -18,8 +24,10 @@ def main():
     # uptake = np.array(df['suv'])
     print('----------------------------------------------------------')
 
-    bounds = ((), (), ())
-    parameters, covariance = curve_fit(exp_func, po2, uptake)
+    bounds = (-100, 100)
+    parameters, covariance = curve_fit(exp_func, po2, uptake,
+                                       bounds=bounds,
+                                       maxfev=10000)
     print(parameters)
     print(covariance)
 
@@ -30,8 +38,8 @@ def main():
     xline = (np.arange(start=1, stop=40, step=0.01))
     fit_y = exp_func(xline, *parameters)
 
-    # plt.plot(xline, fit_y, '-', label='fit')
-    plt.scatter(po2, uptake)
+    plt.plot(xline, fit_y, '-', label='fit')
+    plt.scatter(po2, uptake, label='data points')
     plt.legend()
     # plt.xscale('log')
     # plt.yscale('log')
