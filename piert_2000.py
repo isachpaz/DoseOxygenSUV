@@ -11,6 +11,7 @@ from pyswarms.utils.functions import single_obj as fx
 
 def exp_func(x, a, b, c):
     return c + a * np.exp(b * x)
+    #return c + a * b**x
 
 
 def main():
@@ -53,9 +54,11 @@ def main():
 
     tval = t.ppf(1.0 - alpha / 2.0, dof)  # student-t value for the dof and confidence level
 
-    for i, p, var in zip(range(n), parameters, np.diag(covariance)):
+    par_name = ['a', 'b', 'c']
+    for i, p, var, name in zip(range(n), parameters, np.diag(covariance), par_name):
         sigma = var ** 0.5
-        print('c{0}: {1} [{2}  {3}]'.format(i, p,
+        #print('c{0}: {1} [{2}  {3}]'.format(i, p,
+        print('{0}: {1} [{2}  {3}]'.format(name, p,
                                       p - sigma * tval,
                                       p + sigma * tval))
 
