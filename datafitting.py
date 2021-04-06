@@ -100,6 +100,6 @@ def fit_dasu_data():
 
 
 if __name__ == '__main__':
-    main()
-    # fit_dasu_data()
+    # main()
+    fit_dasu_data()
     # plot1()

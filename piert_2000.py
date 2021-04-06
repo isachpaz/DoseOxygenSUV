@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 import pandas as pd
+from scipy.stats.distributions import t
 
 # Import PySwarms
 import pyswarms as ps
@@ -13,7 +14,7 @@ def exp_func(x, a, b, c):
 
 
 def main():
-    #df = pd.read_csv('Dataset_piert_2000_line_fit.csv')
+    # df = pd.read_csv('Dataset_piert_2000_line_fit.csv')
     df = pd.read_csv('Dataset_piert_2000_points.csv')
 
     print(df.head())
@@ -35,12 +36,31 @@ def main():
     stdevs = np.sqrt(np.diag(covariance))  # Calculate the residuals
     print(f"Std deviation= {stdevs}")
 
+    alpha = 0.05  # 95% confidence interval
+
+    n = len(uptake)  # number of data points
+    p = len(parameters)  # number of parameters
+
+    dof = max(0, n - p)  # number of degrees of freedom
+
+    tval = t.ppf(1.0 - alpha / 2.0, dof)  # student-t value for the dof and confidence level
+
+    for i, p, var in zip(range(n), parameters, np.diag(covariance)):
+        sigma = var ** 0.5
+        print('c{0}: {1} [{2}  {3}]'.format(i, p,
+                                      p - sigma * tval,
+                                      p + sigma * tval))
+
     xline = (np.arange(start=1, stop=40, step=0.01))
     fit_y = exp_func(xline, *parameters)
 
     plt.plot(xline, fit_y, '-', label='fit')
     plt.scatter(po2, uptake, label='data points')
     plt.legend()
+
+    plt.xlabel("$tPO_2$ (mmHg)", fontsize=16)
+    plt.ylabel(f"FMISO SUV", fontsize=16)
+
     # plt.xscale('log')
     # plt.yscale('log')
 

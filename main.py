@@ -3,6 +3,7 @@ from oxygenmodificationfactor import OxygenModificationFactor
 import numpy as np
 import matplotlib.pyplot as plt
 from PO2 import PO2
+import pandas as pd
 
 
 def plot_omf():
@@ -80,7 +81,7 @@ def plot_normalized_uptake():
     normalization_point = 38
     uptakes = po2func.calculate_normalized_uptake_from_po2(spo2s, normalization_point)
     ax = plt.subplot(111)
-    ax.plot(spo2s, uptakes)
+    ax.plot(spo2s, uptakes, label="Lewis et al. 1999 - fitted line")
 
     plt.xscale('log')
     # plt.ylim(0, np.max(uptakes) + 1, 1)
@@ -97,12 +98,22 @@ def plot_normalized_uptake():
 
     colors = ['b', 'g', 'r', 'b', 'r']
 
-    ax.scatter(po2Points, uptakePoints / po2func.calculate_uptake_from_po2(normalization_point), marker='x',
-                c=colors[1], label='normalized data')
+    ax.scatter(po2Points, uptakePoints / po2func.calculate_uptake_from_po2(normalization_point), marker='^',
+               c=colors[1], label='Lewis et al. 1999 data')
 
-    ax.scatter(po2Points, uptakePoints,  label='initial data', c=colors[2])
+    # ax.scatter(po2Points, uptakePoints, label='initial data', c=colors[2])
+
+
+    df = pd.read_csv('Dataset_piert_2000_points.csv')
+    print(df.head())
+    po2 = np.array(df['po2'])
+    suv = np.array(df['suv'])
+    print('----------------------------------------------------------')
+    ax.scatter(po2, suv / 1.1291775157059638
+               , marker='v', c=colors[3], label='Piert et al., 2000 data')
 
     plt.legend(loc='upper right')
+    plt.tight_layout()
     plt.show()
 
 
@@ -122,7 +133,6 @@ def plot_normalized_uptake_for_38_and_60_mmhg():
     ax.plot(spo2s, uptakes60, '--', c='b', label="normalized to 60 mmHg")
     ax.plot(spo2s, uptakes38, '-', c='g', label="normalized to 38 mmHg")
 
-
     plt.xscale('log')
 
     plt.grid(b=True, which='major', color='#666666', linestyle='-')
@@ -131,21 +141,23 @@ def plot_normalized_uptake_for_38_and_60_mmhg():
     plt.tick_params(labelsize=14)
     # plt.yticks(np.arange(0, np.max(uptakes60) + 1, 1.0))
     plt.yticks(np.arange(0, 4 + 1, 0.5))
-    #plt.xticks(np.arange(10, 1100, 100))
+    # plt.xticks(np.arange(10, 1100, 100))
     plt.xlabel("$pO_2$ (mmHg)", fontsize=16)
     plt.ylabel(f"Normalized Uptake", fontsize=16)
 
-    po2Points = [ 38, 152]
-    uptakePoints = np.array([ 1, 0.5])
+    po2Points = [38, 152]
+    uptakePoints = np.array([1, 0.5])
 
     colors = ['b', 'g', 'r', 'b', 'r']
 
     ax.scatter(po2Points, uptakePoints / po2func.calculate_uptake_from_po2(38), marker='x',
-                c=colors[1], label='normalized data to 38mmHg')
+               c=colors[1], label='normalized data to 38mmHg')
 
-    ax.scatter(po2Points, uptakePoints / po2func.calculate_uptake_from_po2(60),  label='normalized data to 60mmHg', c=colors[0])
+    ax.scatter(po2Points, uptakePoints / po2func.calculate_uptake_from_po2(60), label='normalized data to 60mmHg',
+               c=colors[0])
 
     plt.legend(loc='upper right')
+
     plt.show()
 
 
