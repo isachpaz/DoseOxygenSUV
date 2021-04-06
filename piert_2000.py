@@ -32,6 +32,14 @@ def main():
     print(parameters)
     print(covariance)
 
+    estimated_values = exp_func(po2, *parameters)
+    correlation_matrix = np.corrcoef(estimated_values, uptake)
+    correlation_xy = correlation_matrix[0, 1]
+
+    r_squared = correlation_xy ** 2
+
+    print(f"r_squared = {r_squared:.2f}")
+
     # Get the standard deviations of the parameters (square roots of the # diagonal of the covariance)
     stdevs = np.sqrt(np.diag(covariance))  # Calculate the residuals
     print(f"Std deviation= {stdevs}")
